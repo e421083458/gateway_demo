@@ -2,6 +2,7 @@ package public
 
 import (
 	"github.com/afex/hystrix-go/hystrix"
+	"log"
 	"net"
 	"net/http"
 )
@@ -18,6 +19,9 @@ func ConfCricuitBreaker(openStream bool) {
 	if openStream {
 		hystrixStreamHandler := hystrix.NewStreamHandler()
 		hystrixStreamHandler.Start()
-		go http.ListenAndServe(net.JoinHostPort("", "81"), hystrixStreamHandler)
+		go func() {
+			err := http.ListenAndServe(net.JoinHostPort("", "2001"), hystrixStreamHandler)
+			log.Fatal(err)
+		}()
 	}
 }

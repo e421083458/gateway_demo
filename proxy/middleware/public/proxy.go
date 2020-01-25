@@ -2,6 +2,7 @@ package public
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/e421083458/gateway_demo/proxy/middleware/middleware"
 	"io/ioutil"
 	"math/rand"
@@ -65,7 +66,8 @@ func NewMultipleHostsReverseProxy(c *middleware.SliceRouterContext, targets []*u
 	//错误回调 ：关闭real_server时测试，错误回调
 	//范围：transport.RoundTrip发生的错误、以及ModifyResponse发生的错误
 	errFunc := func(w http.ResponseWriter, r *http.Request, err error) {
-		http.Error(w, "ErrorHandler error:"+err.Error(), 500)
+		//todo record error log
+		fmt.Println(err)
 	}
 
 	return &httputil.ReverseProxy{Director: director, Transport: transport, ModifyResponse: modifyFunc, ErrorHandler: errFunc}
