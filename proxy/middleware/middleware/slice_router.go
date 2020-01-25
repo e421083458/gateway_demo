@@ -1,11 +1,14 @@
-package common
+package middleware
 
 import (
+	"context"
 	"math"
 	"net/http"
 )
 
-const abortIndex int8 = math.MaxInt8
+//目标定位是 grpc、rpc、http通用的中间件
+
+const abortIndex int8 = math.MaxInt8 / 2 //最多63个中间件
 
 type HandlerFunc func(*SliceRouterContext)
 
@@ -16,37 +19,47 @@ type SliceRouter struct {
 
 // router上下文
 type SliceRouterContext struct {
-	rw  http.ResponseWriter
-	req *http.Request
+	Rw  http.ResponseWriter
+	Req *http.Request
+	Ctx context.Context
 	*SliceRouter
 	index int8
 }
 
 func newSliceRouterContext(rw http.ResponseWriter, req *http.Request, r *SliceRouter) *SliceRouterContext {
 	newSliceRouter := &SliceRouter{}
-	*newSliceRouter = *r	//浅拷贝数组指针
-	c := &SliceRouterContext{rw: rw, req: req, SliceRouter: newSliceRouter}
+	*newSliceRouter = *r //浅拷贝数组指针
+	c := &SliceRouterContext{Rw: rw, Req: req, SliceRouter: newSliceRouter, Ctx: req.Context()}
 	c.Reset()
 	return c
 }
 
+func (c *SliceRouterContext) Get(key interface{}) interface{} {
+	return c.Ctx.Value(key)
+}
+
+func (c *SliceRouterContext) Set(key, val interface{}) {
+	c.Ctx = context.WithValue(c.Ctx, key, val)
+}
+
 type SliceRouterHandler struct {
-	handler http.Handler
-	router  *SliceRouter
+	coreFunc func(*SliceRouterContext) http.Handler
+	router   *SliceRouter
 }
 
 func (w *SliceRouterHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	c := newSliceRouterContext(rw, req, w.router)
 	c.handlers = append(c.handlers, func(c *SliceRouterContext) {
-		w.handler.ServeHTTP(c.rw, c.req)
+		w.coreFunc(c).ServeHTTP(rw, req)
 	})
+	c.Reset()
 	c.Next()
 }
 
-func NewSliceRouterHandler(handler http.Handler, router *SliceRouter) *SliceRouterHandler {
+func NewSliceRouterHandler(coreFunc func(*SliceRouterContext) http.Handler, router *SliceRouter) *SliceRouterHandler {
 	return &SliceRouterHandler{
-		handler: handler,
-		router:  router,
+		coreFunc: coreFunc,
+		router:   router,
 	}
 }
 
@@ -65,6 +78,8 @@ func (g *SliceRouter) Use(middlewares ...HandlerFunc) *SliceRouter {
 func (c *SliceRouterContext) Next() {
 	c.index++
 	for c.index < int8(len(c.handlers)) {
+		//fmt.Println("c.index")
+		//fmt.Println(c.index)
 		c.handlers[c.index](c)
 		c.index++
 	}

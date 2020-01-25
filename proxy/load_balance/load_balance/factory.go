@@ -1,4 +1,4 @@
-package common
+package load_balance
 
 type LbType int
 

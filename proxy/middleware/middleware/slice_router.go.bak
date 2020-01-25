@@ -1,0 +1,86 @@
+package middleware
+
+import (
+	"math"
+	"net/http"
+)
+
+const abortIndex int8 = math.MaxInt8
+
+type HandlerFunc func(*SliceRouterContext)
+
+// router结构体
+type SliceRouter struct {
+	handlers []HandlerFunc
+}
+
+// router上下文
+type SliceRouterContext struct {
+	rw  http.ResponseWriter
+	req *http.Request
+	*SliceRouter
+	index int8
+}
+
+func newSliceRouterContext(rw http.ResponseWriter, req *http.Request, r *SliceRouter) *SliceRouterContext {
+	newSliceRouter := &SliceRouter{}
+	*newSliceRouter = *r	//浅拷贝数组指针
+	c := &SliceRouterContext{rw: rw, req: req, SliceRouter: newSliceRouter}
+	c.Reset()
+	return c
+}
+
+type SliceRouterHandler struct {
+	handler http.Handler
+	router  *SliceRouter
+}
+
+func (w *SliceRouterHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	c := newSliceRouterContext(rw, req, w.router)
+	c.handlers = append(c.handlers, func(c *SliceRouterContext) {
+		w.handler.ServeHTTP(c.rw, c.req)
+	})
+	c.Next()
+}
+
+func NewSliceRouterHandler(handler http.Handler, router *SliceRouter) *SliceRouterHandler {
+	return &SliceRouterHandler{
+		handler: handler,
+		router:  router,
+	}
+}
+
+// 构造 router
+func NewSliceRouter() *SliceRouter {
+	return &SliceRouter{}
+}
+
+// 构造回调方法
+func (g *SliceRouter) Use(middlewares ...HandlerFunc) *SliceRouter {
+	g.handlers = append(g.handlers, middlewares...)
+	return g
+}
+
+// 从最先加入中间件开始回调
+func (c *SliceRouterContext) Next() {
+	c.index++
+	for c.index < int8(len(c.handlers)) {
+		c.handlers[c.index](c)
+		c.index++
+	}
+}
+
+// 跳出中间件方法
+func (c *SliceRouterContext) Abort() {
+	c.index = abortIndex
+}
+
+// 是否跳过了回调
+func (c *SliceRouterContext) IsAborted() bool {
+	return c.index >= abortIndex
+}
+
+// 重置回调
+func (c *SliceRouterContext) Reset() {
+	c.index = -1
+}

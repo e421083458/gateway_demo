@@ -1,12 +1,12 @@
-package common
+package load_balance
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestRandomBalance(t *testing.T) {
-	rb := &RandomBalance{}
+func Test_main(t *testing.T) {
+	rb := &RoundRobinBalance{}
 	rb.Add("127.0.0.1:2003") //0
 	rb.Add("127.0.0.1:2004") //1
 	rb.Add("127.0.0.1:2005") //2

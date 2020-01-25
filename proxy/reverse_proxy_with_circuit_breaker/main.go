@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/e421083458/gateway_demo/proxy/middleware/middleware"
-	"github.com/e421083458/gateway_demo/proxy/middleware/public"
+	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_with_circuit_breaker/middleware"
+	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_with_circuit_breaker/public"
 	"log"
 	"net/http"
 	"net/url"
@@ -28,8 +28,9 @@ func main() {
 		return public.NewMultipleHostsReverseProxy(c, urls)
 	}
 	log.Println("Starting httpserver at " + addr)
-	//routerHandler := common.NewChainRouter(proxy).Use(common.TraceLogChainMW())
-	sliceRouter := middleware.NewSliceRouter().Use(middleware.TraceLogSliceMW())
+
+	public.ConfCricuitBreaker(true)
+	sliceRouter := middleware.NewSliceRouter().Use(middleware.CircuitMW())
 	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
 	log.Fatal(http.ListenAndServe(addr, routerHandler))
 }

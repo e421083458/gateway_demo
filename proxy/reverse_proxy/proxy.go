@@ -2,9 +2,8 @@ package main
 
 import (
 	"bytes"
-	"github.com/e421083458/gateway_demo/proxy/load_balance/load_balance"
 	"io/ioutil"
-	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -14,32 +13,24 @@ import (
 	"time"
 )
 
-var (
-	addr      = "127.0.0.1:2002"
-	transport = &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second, //连接超时
-			KeepAlive: 30 * time.Second, //长连接超时时间
-		}).DialContext,
-		MaxIdleConns:          100,              //最大空闲连接
-		IdleConnTimeout:       90 * time.Second, //空闲超时时间
-		TLSHandshakeTimeout:   10 * time.Second, //tls握手超时时间
-		ExpectContinueTimeout: 1 * time.Second,  //100-continue状态码超时时间
-	}
-)
+var transport = &http.Transport{
+	DialContext: (&net.Dialer{
+		Timeout:   30 * time.Second, //连接超时
+		KeepAlive: 30 * time.Second, //长连接超时时间
+	}).DialContext,
+	MaxIdleConns:          100,              //最大空闲连接
+	IdleConnTimeout:       90 * time.Second, //空闲超时时间
+	TLSHandshakeTimeout:   10 * time.Second, //tls握手超时时间
+	ExpectContinueTimeout: 1 * time.Second,  //100-continue 超时时间
+}
 
-func NewMultipleHostsReverseProxy(lb load_balance.LoadBalance) *httputil.ReverseProxy {
+func NewMultipleHostsReverseProxy(targets []*url.URL) *httputil.ReverseProxy {
 	//请求协调者
 	director := func(req *http.Request) {
-		nextAddr, err := lb.Get(req.URL.String())
-		if err != nil {
-			log.Fatal("get next addr fail")
-		}
-		target, err := url.Parse(nextAddr)
-		if err != nil {
-			log.Fatal(err)
-		}
+		targetIndex := rand.Intn(len(targets))
+		target := targets[targetIndex]
 		targetQuery := target.RawQuery
+
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
 		req.URL.Path = singleJoiningSlash(target.Path, req.URL.Path)
@@ -78,19 +69,6 @@ func NewMultipleHostsReverseProxy(lb load_balance.LoadBalance) *httputil.Reverse
 	}
 
 	return &httputil.ReverseProxy{Director: director, Transport: transport, ModifyResponse: modifyFunc, ErrorHandler: errFunc}
-}
-
-func main() {
-	rb := load_balance.LoadBanlanceFactory(load_balance.LbConsistentHash)
-	if err := rb.Add("http://127.0.0.1:2003/base", "10"); err != nil {
-		log.Println(err)
-	}
-	if err := rb.Add("http://127.0.0.1:2004/base", "20"); err != nil {
-		log.Println(err)
-	}
-	proxy := NewMultipleHostsReverseProxy(rb)
-	log.Println("Starting httpserver at " + addr)
-	log.Fatal(http.ListenAndServe(addr, proxy))
 }
 
 func singleJoiningSlash(a, b string) string {
