@@ -1,8 +1,8 @@
-package main
+package middleware
 
 import (
-	"github.com/e421083458/gateway_demo/proxy/middleware/middleware"
-	"github.com/e421083458/gateway_demo/proxy/middleware/public"
+	"github.com/e421083458/gateway_demo/proxy/middleware"
+	"github.com/e421083458/gateway_demo/proxy/proxy"
 	"log"
 	"net/http"
 	"net/url"
@@ -25,7 +25,7 @@ func main() {
 		}
 
 		urls := []*url.URL{url1, url2}
-		return public.NewMultipleHostsReverseProxy(c, urls)
+		return proxy.NewMultipleHostsReverseProxy(c, urls)
 	}
 	log.Println("Starting httpserver at " + addr)
 	//routerHandler := common.NewChainRouter(proxy).Use(common.TraceLogChainMW())

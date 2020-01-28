@@ -1,9 +1,9 @@
-package public
+package proxy
 
 import (
 	"bytes"
 	"fmt"
-	"github.com/e421083458/gateway_demo/proxy/middleware/middleware"
+	"github.com/e421083458/gateway_demo/proxy/middleware"
 	"io/ioutil"
 	"math/rand"
 	"net"

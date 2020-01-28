@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 var addr = "127.0.0.1:2002"
@@ -32,7 +33,8 @@ func main() {
 
 	public.ConfCricuitBreaker(true)
 	sliceRouter := middleware.NewSliceRouter()
-	sliceRouter.Group("/").Use(middleware.IpWhiteListMiddleWare(), middleware.JwtMiddleWare())
+	counter, _ := public.NewFlowCountService("11", time.Second)
+	sliceRouter.Group("/").Use(middleware.FlowCountMiddleWare(counter), )
 	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
 	log.Fatal(http.ListenAndServe(addr, routerHandler))
 }

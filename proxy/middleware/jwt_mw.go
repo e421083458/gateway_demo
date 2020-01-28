@@ -1,11 +1,11 @@
 package middleware
 
-import "github.com/e421083458/gateway_demo/proxy/security_check/jwt"
+import "github.com/e421083458/gateway_demo/proxy/public"
 
 func JwtMiddleWare() func(c *SliceRouterContext) {
 	return func(c *SliceRouterContext) {
 		token := c.Req.Header.Get("token")
-		if foo, err := jwt.Decode(token); err == nil && foo == "foo" {
+		if foo, err := public.Decode(token); err == nil && foo == "foo" {
 			c.Next()
 		} else {
 			c.Rw.Write([]byte("jwt auth invalid"))

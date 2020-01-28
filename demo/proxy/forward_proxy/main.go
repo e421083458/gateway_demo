@@ -16,7 +16,7 @@ func (p *Pxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	// step 1
 	outReq := new(http.Request)
-	*outReq = *req // this only does shallow copies of maps
+	*outReq = *req
 
 	if clientIP, _, err := net.SplitHostPort(req.RemoteAddr); err == nil {
 		if prior, ok := outReq.Header["X-Forwarded-For"]; ok {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/e421083458/gateway_demo/proxy/security_check/jwt"
+	"github.com/e421083458/gateway_demo/proxy/public"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	jwtToken, err := jwt.Encode("foo")
+	jwtToken, err := public.Encode("foo")
 	if err != nil {
 		panic(err)
 	}

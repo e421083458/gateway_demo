@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_with_circuit_breaker/middleware"
-	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_with_circuit_breaker/public"
+	"github.com/e421083458/gateway_demo/proxy/middleware"
+	"github.com/e421083458/gateway_demo/proxy/proxy"
+	"github.com/e421083458/gateway_demo/proxy/public"
 	"log"
 	"net/http"
 	"net/url"
@@ -26,7 +27,7 @@ func main() {
 		}
 
 		urls := []*url.URL{url1, url2}
-		return public.NewMultipleHostsReverseProxy(c, urls)
+		return proxy.NewMultipleHostsReverseProxy(c, urls)
 	}
 	log.Println("Starting httpserver at " + addr)
 

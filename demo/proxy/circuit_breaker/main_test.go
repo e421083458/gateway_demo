@@ -4,10 +4,11 @@ import (
 	"errors"
 	"github.com/afex/hystrix-go/hystrix"
 	"log"
+	"testing"
 	"time"
 )
 
-func main() {
+func Test_main(t *testing.T) {
 	hystrix.ConfigureCommand("aaa", hystrix.CommandConfig{
 		Timeout:                1000, // 单次请求 超时时间
 		MaxConcurrentRequests:  1,    // 最大并发量
