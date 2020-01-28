@@ -74,6 +74,7 @@ func NewMultipleHostsReverseProxy(lb load_balance.LoadBalance) *httputil.Reverse
 	//错误回调 ：关闭real_server时测试，错误回调
 	//范围：transport.RoundTrip发生的错误、以及ModifyResponse发生的错误
 	errFunc := func(w http.ResponseWriter, r *http.Request, err error) {
+		//todo 如果是权重的负载则调整临时权重
 		http.Error(w, "ErrorHandler error:"+err.Error(), 500)
 	}
 

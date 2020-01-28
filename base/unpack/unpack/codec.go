@@ -1,40 +1,16 @@
-package main
+package unpack
 
 import (
-	"bytes"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"io"
 )
 
 const Msg_Header = "12345678"
 
-func main() {
-	//类比接收缓冲区 net.Conn
-	bytesBuffer := bytes.NewBuffer([]byte{})
-
-	//发送
-	if err := Encode(bytesBuffer, "hello world 0!!!"); err != nil {
-		panic(err)
-	}
-	if err := Encode(bytesBuffer, "hello world 1!!!"); err != nil {
-		panic(err)
-	}
-
-	//读取
-	for {
-		if bt, err := Decode(bytesBuffer); err == nil {
-			fmt.Println(string(bt))
-			continue
-		}
-		break
-	}
-}
-
 func Encode(bytesBuffer io.Writer, content string) error {
 	//msg_header+content_len+content
-	//8			+4			+content
+	//8+4+content_len
 	if err := binary.Write(bytesBuffer, binary.BigEndian, []byte(Msg_Header)); err != nil {
 		return err
 	}

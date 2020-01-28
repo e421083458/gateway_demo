@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/e421083458/gateway_demo/proxy/security_check/jwt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -20,18 +21,28 @@ func main() {
 		TLSHandshakeTimeout:   10 * time.Second, //tls握手超时时间
 		ExpectContinueTimeout: 1 * time.Second,  //100-continue状态码超时时间
 	}
+
 	// 创建客户端
 	client := &http.Client{
 		Timeout:   time.Second * 30, //请求超时时间
 		Transport: transport,
 	}
+
 	// 请求数据
-	resp, err := client.Get("http://127.0.0.1:1210/bye");
+	req, err := http.NewRequest("GET", "http://127.0.0.1:2002/bye", nil)
+	if err != nil {
+		panic(err)
+	}
+	jwtToken, err := jwt.Encode("foo")
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("token", jwtToken)
+	resp, err := client.Do(req)
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
-	// 读取内容
 	bds, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)

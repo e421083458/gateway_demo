@@ -31,7 +31,8 @@ func main() {
 	log.Println("Starting httpserver at " + addr)
 
 	public.ConfCricuitBreaker(true)
-	sliceRouter := middleware.NewSliceRouter().Use(middleware.CircuitMW())
+	sliceRouter := middleware.NewSliceRouter()
+	sliceRouter.Group("/").Use(middleware.CircuitMW())
 	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
 	log.Fatal(http.ListenAndServe(addr, routerHandler))
 }

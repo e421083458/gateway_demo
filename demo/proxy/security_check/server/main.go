@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/e421083458/gateway_demo/proxy/middleware/middleware"
-	"github.com/e421083458/gateway_demo/proxy/middleware/public"
+	"github.com/e421083458/gateway_demo/proxy/security_check/middleware"
+	"github.com/e421083458/gateway_demo/proxy/security_check/public"
 	"log"
 	"net/http"
 	"net/url"
@@ -28,12 +28,10 @@ func main() {
 		return public.NewMultipleHostsReverseProxy(c, urls)
 	}
 	log.Println("Starting httpserver at " + addr)
-	//routerHandler := common.NewChainRouter(proxy).Use(common.TraceLogChainMW())
-	sliceRouter := middleware.NewSliceRouter()
-	sliceGroup := sliceRouter.Group("/")
-	sliceGroup.Use()
-	sliceRouter.Group("/base").Use(middleware.TraceLogSliceMW())
 
+	public.ConfCricuitBreaker(true)
+	sliceRouter := middleware.NewSliceRouter()
+	sliceRouter.Group("/").Use(middleware.IpWhiteListMiddleWare(), middleware.JwtMiddleWare())
 	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
 	log.Fatal(http.ListenAndServe(addr, routerHandler))
 }
