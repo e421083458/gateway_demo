@@ -18,15 +18,14 @@ func Test_main(t *testing.T) {
 	})
 
 	for i := 0; i < 100; i++ {
+		//异步调用使用 hystrix.Go
 		err := hystrix.Do("aaa", func() error {
 			//test case 1 并发测试
 			if i == 0 {
 				return errors.New("service error")
 			}
-
 			//test case 2 超时测试
 			//time.Sleep(2 * time.Second)
-
 			log.Println("do services")
 			return nil
 		}, nil)

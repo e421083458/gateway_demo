@@ -18,7 +18,7 @@ var (
 
 type TcpServer struct {
 	Addr    string
-	Handler TCPHandler
+	//Handler TCPHandler
 	err     error
 
 	WriteTimeout     time.Duration
