@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/e421083458/gateway_demo/proxy/middleware"
 	"github.com/e421083458/gateway_demo/proxy/proxy"
-	"github.com/e421083458/gateway_demo/proxy/public"
 	"log"
 	"net/http"
 	"net/url"
@@ -30,7 +29,6 @@ func main() {
 	}
 	log.Println("Starting httpserver at " + addr)
 
-	public.ConfCricuitBreaker(true)
 	sliceRouter := middleware.NewSliceRouter()
 	sliceRouter.Group("/").Use(middleware.IpWhiteListMiddleWare(), middleware.JwtMiddleWare())
 	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)

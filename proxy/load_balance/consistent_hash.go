@@ -2,9 +2,11 @@ package load_balance
 
 import (
 	"errors"
+	"fmt"
 	"hash/crc32"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -30,6 +32,9 @@ type ConsistentHashBanlance struct {
 	replicas int               //复制因子
 	keys     UInt32Slice       //已排序的节点hash切片
 	hashMap  map[uint32]string //节点哈希和Key的map,键是hash值，值是节点key
+
+	//观察主题
+	conf LoadBalanceConf
 }
 
 func NewConsistentHashBanlance(replicas int, fn Hash) *ConsistentHashBanlance {
@@ -89,4 +94,21 @@ func (c *ConsistentHashBanlance) Get(key string) (string, error) {
 	c.mux.RLock()
 	defer c.mux.RUnlock()
 	return c.hashMap[c.keys[idx]], nil
+}
+
+func (c *ConsistentHashBanlance) SetConf(conf LoadBalanceConf) {
+	c.conf = conf
+}
+
+func (c *ConsistentHashBanlance) Update() {
+	if conf, ok := c.conf.(*LoadBalanceZkConf); ok {
+		fmt.Println("Update get conf:", conf.GetConf())
+		c.mux.Lock()
+		defer c.mux.Unlock()
+		c.keys = nil
+		c.hashMap = nil
+		for _, ip := range conf.GetConf() {
+			c.Add(strings.Split(ip, ",")...)
+		}
+	}
 }

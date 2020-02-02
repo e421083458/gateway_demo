@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_http2/testdata"
+	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_http2/testdata"
 	"io/ioutil"
 	"math/rand"
 	"net"

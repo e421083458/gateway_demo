@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_http2/testdata"
+	"github.com/e421083458/gateway_demo/proxy/zookeeper"
 	"io"
 	"log"
 	"net/http"
@@ -13,10 +13,12 @@ import (
 )
 
 func main() {
-	rs1 := &RealServer{Addr: "127.0.0.1:3003"}
+	rs1 := &RealServer{Addr: "127.0.0.1:2003"}
 	rs1.Run()
-	rs2 := &RealServer{Addr: "127.0.0.1:3004"}
+	time.Sleep(2 * time.Second)
+	rs2 := &RealServer{Addr: "127.0.0.1:2004"}
 	rs2.Run()
+	time.Sleep(2 * time.Second)
 
 	//监听关闭信号
 	quit := make(chan os.Signal)
@@ -39,7 +41,20 @@ func (r *RealServer) Run() {
 		Handler:      mux,
 	}
 	go func() {
-		log.Fatal(server.ListenAndServeTLS(testdata.Path("server.crt"), testdata.Path("server.key")))
+		//注册zk节点
+		zkManager := zookeeper.NewZkManager([]string{"127.0.0.1:2181"})
+		err := zkManager.GetConnect()
+		if err != nil {
+			fmt.Printf(" connect zk error: %s ", err)
+		}
+		defer zkManager.Close()
+		err = zkManager.RegistServerPath("/rs_server", r.Addr)
+		if err != nil {
+			fmt.Printf(" regist node error: %s ", err)
+		}
+		zlist, err := zkManager.GetServerListByPath("/rs_server")
+		fmt.Println(zlist)
+		log.Fatal(server.ListenAndServe())
 	}()
 }
 

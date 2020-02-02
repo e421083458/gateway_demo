@@ -1,10 +1,17 @@
 package load_balance
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
 
 type RoundRobinBalance struct {
 	curIndex int
 	rss      []string
+
+	//观察主题
+	conf LoadBalanceConf
 }
 
 func (r *RoundRobinBalance) Add(params ...string) error {
@@ -31,4 +38,18 @@ func (r *RoundRobinBalance) Next() string {
 
 func (r *RoundRobinBalance) Get(key string) (string, error) {
 	return r.Next(), nil
+}
+
+func (r *RoundRobinBalance) SetConf(conf LoadBalanceConf) {
+	r.conf = conf
+}
+
+func (r *RoundRobinBalance) Update() {
+	if conf, ok := r.conf.(*LoadBalanceZkConf); ok {
+		fmt.Println("Update get conf:", conf.GetConf())
+		r.rss = []string{}
+		for _, ip := range conf.GetConf() {
+			r.Add(strings.Split(ip, ",")...)
+		}
+	}
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_http2/public"
-	"github.com/e421083458/gateway_demo/proxy/reverse_proxy_http2/testdata"
+	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_http2/public"
+	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_http2/testdata"
 	"log"
 	"net/http"
 	"net/url"
@@ -11,7 +11,8 @@ import (
 var addr = "tonybai.com:3002"
 
 func main() {
-	rs1 := "https://tonybai.com:50051"
+	rs1 := "https://tonybai.com:3003"
+	//rs1 := "https://127.0.0.1:3003"
 	url1, err1 := url.Parse(rs1)
 	if err1 != nil {
 		log.Println(err1)
