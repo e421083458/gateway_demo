@@ -13,6 +13,7 @@ var (
 )
 
 func main() {
+	//客户端注册：https://github.com/e421083458/gateway_demo/blob/master/demo/proxy/real_server_register/main.go
 	mConf, err := load_balance.NewLoadBalanceZkConf("http://%s/base",
 		"/rs_server",
 		[]string{"127.0.0.1:2181"},
