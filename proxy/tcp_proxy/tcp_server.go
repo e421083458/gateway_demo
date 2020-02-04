@@ -16,9 +16,13 @@ var (
 	LocalAddrContextKey = &contextKey{"local-addr"}
 )
 
+type TCPHandler interface {
+	ServeTCP(ctx context.Context, conn net.Conn)
+}
+
 type TcpServer struct {
 	Addr    string
-	//Handler TCPHandler
+	Handler TCPHandler
 	err     error
 
 	WriteTimeout     time.Duration

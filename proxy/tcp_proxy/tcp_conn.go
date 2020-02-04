@@ -57,19 +57,17 @@ func (c *conn) serve(ctx context.Context) {
 			const size = 64 << 10
 			buf := make([]byte, size)
 			buf = buf[:runtime.Stack(buf, false)]
-			fmt.Println("tcp: panic serving %v: %v\n%s", c.remoteAddr, err, buf)
+			fmt.Printf("tcp: panic serving %v: %v\n%s", c.remoteAddr, err, buf)
 		}
 		c.close()
 	}()
 	c.remoteAddr = c.rwc.RemoteAddr().String()
 	ctx = context.WithValue(ctx, LocalAddrContextKey, c.rwc.LocalAddr())
+	//fmt.Println("c.rwc.LocalAddr()", c.rwc.LocalAddr())
+	//fmt.Println("c.server.Handler", c.server.Handler)
+	if c.server.Handler == nil {
+		panic("handler empty")
+	}
 	c.server.Handler.ServeTCP(ctx, c.rwc)
+	//fmt.Println("after Handler.ServeTCP")
 }
-//
-//type ServeMux struct {
-//}
-//
-//func (mux *ServeMux) ServeTCP(ctx context.Context, conn net.Conn) {
-//	fmt.Println("Default ServeMux ServeTCP")
-//	conn.Write([]byte("Default ServeMux ServeTCP"))
-//}
