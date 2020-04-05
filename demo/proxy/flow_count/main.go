@@ -33,7 +33,7 @@ func main() {
 
 	public.ConfCricuitBreaker(true)
 	sliceRouter := middleware.NewSliceRouter()
-	counter, _ := public.NewFlowCountService("11", time.Second)
+	counter, _ := public.NewFlowCountService("local_app", time.Second)
 	sliceRouter.Group("/").Use(middleware.FlowCountMiddleWare(counter), )
 	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
 	log.Fatal(http.ListenAndServe(addr, routerHandler))

@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"bytes"
+	"compress/gzip"
 	"fmt"
 	"github.com/e421083458/gateway_demo/proxy/middleware"
 	"io/ioutil"
@@ -36,6 +37,8 @@ func NewMultipleHostsReverseProxy(c *middleware.SliceRouterContext, targets []*u
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
 		req.URL.Path = singleJoiningSlash(target.Path, req.URL.Path)
+		//todo 当对域名(非内网)反向代理时需要设置此项, 当作后端反向代理时不需要
+		req.Host = target.Host
 		if targetQuery == "" || req.URL.RawQuery == "" {
 			req.URL.RawQuery = targetQuery + req.URL.RawQuery
 		} else {
@@ -48,13 +51,37 @@ func NewMultipleHostsReverseProxy(c *middleware.SliceRouterContext, targets []*u
 
 	//更改内容
 	modifyFunc := func(resp *http.Response) error {
-		payload, err := ioutil.ReadAll(resp.Body)
-		if resp.StatusCode != 200 {
+		//todo 部分章节功能补充2
+		//todo 兼容websocket
+		if strings.Contains(resp.Header.Get("Connection"), "Upgrade") {
+			return nil
+		}
+		var payload []byte
+		var readErr error
+
+		//todo 部分章节功能补充3
+		//todo 兼容gzip压缩
+		if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+			gr, err := gzip.NewReader(resp.Body)
 			if err != nil {
 				return err
 			}
+			payload, readErr = ioutil.ReadAll(gr)
+			resp.Header.Del("Content-Encoding")
+		} else {
+			payload, readErr = ioutil.ReadAll(resp.Body)
+		}
+		if readErr != nil {
+			return readErr
+		}
+
+		//异常请求时设置StatusCode
+		if resp.StatusCode != 200 {
 			payload = []byte("StatusCode error:" + string(payload))
 		}
+
+		//todo 部分章节功能补充4
+		//todo 因为预读了数据所以内容重新回写
 		c.Set("status_code", resp.StatusCode)
 		c.Set("payload", payload)
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer(payload))

@@ -2,20 +2,17 @@ package public
 
 import (
 	"fmt"
-	"sync"
 	"sync/atomic"
 	"time"
 )
 
 type FlowCountService struct {
-	AppID       string
-	Interval    time.Duration
-	Lock        sync.RWMutex
-	TotalCount  int64
-	QPS         int64
-	Unix        int64
-	TickerCount int64
-	ReqDate     string
+	AppID       string        //应用ID
+	Interval    time.Duration //采集频率
+	TotalCount  int64         //当前总共请求数
+	QPS         int64         //QPS
+	Unix        int64         //上次unix时间戳
+	TickerCount int64         //当前流量
 }
 
 func NewFlowCountService(appID string, interval time.Duration) (*FlowCountService, error) {
@@ -41,12 +38,12 @@ func NewFlowCountService(appID string, interval time.Duration) (*FlowCountServic
 			nowUnix := time.Now().Unix()
 			if reqCounter.Unix == 0 {
 				reqCounter.Unix = time.Now().Unix()
-			} else {
-				if nowUnix > reqCounter.Unix {
-					reqCounter.QPS = tickerCount / (nowUnix - reqCounter.Unix)
-					reqCounter.TotalCount = reqCounter.TotalCount + tickerCount
-					reqCounter.Unix = time.Now().Unix()
-				}
+				continue
+			}
+			if nowUnix > reqCounter.Unix {
+				reqCounter.QPS = tickerCount / (nowUnix - reqCounter.Unix)
+				reqCounter.TotalCount = reqCounter.TotalCount + tickerCount
+				reqCounter.Unix = time.Now().Unix()
 			}
 		}
 	}()
@@ -55,7 +52,6 @@ func NewFlowCountService(appID string, interval time.Duration) (*FlowCountServic
 
 //原子增加
 func (o *FlowCountService) Increase() {
-	fmt.Println("Increase")
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {

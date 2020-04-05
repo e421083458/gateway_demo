@@ -1,33 +1,37 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"golang.org/x/time/rate"
+	"github.com/e421083458/gateway_demo/proxy/middleware"
+	"github.com/e421083458/gateway_demo/proxy/proxy"
 	"log"
-	"time"
+	"net/http"
+	"net/url"
 )
 
+var addr = "127.0.0.1:2002"
+
+// 熔断方案
 func main() {
-	l := rate.NewLimiter(1, 2)
-	log.Println(l.Limit(), l.Burst())
-	for i := 0; i < 100; i++ {
-		//阻塞等待直到，取到一个token
-		c, _ := context.WithTimeout(context.Background(), time.Second*2)
-		if err := l.Wait(c); err != nil {
-			log.Println("limiter wait err:" + err.Error())
+	coreFunc := func(c *middleware.SliceRouterContext) http.Handler {
+		rs1 := "http://127.0.0.1:2003/base"
+		url1, err1 := url.Parse(rs1)
+		if err1 != nil {
+			log.Println(err1)
 		}
 
-		//返回需要等待多久才有新的token,这样就可以等待指定时间执行任务
-		r := l.Reserve()
-		log.Println(r.Delay())
-
-		//判断当前是否可以取到token
-		if !l.Allow() {
-			fmt.Println("limit no allow")
+		rs2 := "http://127.0.0.1:2004/base"
+		url2, err2 := url.Parse(rs2)
+		if err2 != nil {
+			log.Println(err2)
 		}
 
-		time.Sleep(200 * time.Millisecond)
-		log.Println(time.Now().Format("2006-01-02 15:04:05.000"))
+		urls := []*url.URL{url1, url2}
+		return proxy.NewMultipleHostsReverseProxy(c, urls)
 	}
+	log.Println("Starting httpserver at " + addr)
+
+	sliceRouter := middleware.NewSliceRouter()
+	sliceRouter.Group("/").Use(middleware.RateLimiter())
+	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
+	log.Fatal(http.ListenAndServe(addr, routerHandler))
 }

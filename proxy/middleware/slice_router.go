@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"math"
 	"net/http"
 	"strings"
@@ -11,7 +10,7 @@ import (
 //目标定位是 tcp、http通用的中间件
 //知其然也知其所以然
 
-const abortIndex int8 = math.MaxInt8 / 2 //最多63个中间件
+const abortIndex int8 = math.MaxInt8 / 2 //最多 63 个中间件
 
 type HandlerFunc func(*SliceRouterContext)
 
@@ -42,8 +41,8 @@ func newSliceRouterContext(rw http.ResponseWriter, req *http.Request, r *SliceRo
 	//最长url前缀匹配
 	matchUrlLen := 0
 	for _, group := range r.groups {
-		fmt.Println("req.RequestURI")
-		fmt.Println(req.RequestURI)
+		//fmt.Println("req.RequestURI")
+		//fmt.Println(req.RequestURI)
 		if strings.HasPrefix(req.RequestURI, group.path) {
 			pathLen := len(group.path)
 			if pathLen > matchUrlLen {
@@ -73,9 +72,11 @@ type SliceRouterHandler struct {
 
 func (w *SliceRouterHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	c := newSliceRouterContext(rw, req, w.router)
-	c.handlers = append(c.handlers, func(c *SliceRouterContext) {
-		w.coreFunc(c).ServeHTTP(rw, req)
-	})
+	if w.coreFunc != nil {
+		c.handlers = append(c.handlers, func(c *SliceRouterContext) {
+			w.coreFunc(c).ServeHTTP(rw, req)
+		})
+	}
 	c.Reset()
 	c.Next()
 }

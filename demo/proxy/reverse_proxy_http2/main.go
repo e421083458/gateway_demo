@@ -1,18 +1,19 @@
 package main
 
 import (
-	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_http2/public"
-	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_http2/testdata"
+	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_https/public"
+	"github.com/e421083458/gateway_demo/demo/proxy/reverse_proxy_https/testdata"
+	"golang.org/x/net/http2"
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 )
 
-var addr = "tonybai.com:3002"
+var addr = "example1.com:3002"
 
 func main() {
-	rs1 := "https://tonybai.com:3003"
-	//rs1 := "https://127.0.0.1:3003"
+	rs1 := "https://example1.com:3003"
 	url1, err1 := url.Parse(rs1)
 	if err1 != nil {
 		log.Println(err1)
@@ -20,6 +21,15 @@ func main() {
 	urls := []*url.URL{url1}
 	proxy := public.NewMultipleHostsReverseProxy(urls)
 	log.Println("Starting httpserver at " + addr)
-	//log.Fatal(http.ListenAndServe(addr, proxy))
-	log.Fatal(http.ListenAndServeTLS(addr, testdata.Path("server.crt"), testdata.Path("server.key"), proxy))
+
+	mux := http.NewServeMux()
+	mux.Handle("/", proxy)
+	server := &http.Server{
+		Addr:         addr,
+		WriteTimeout: time.Second * 3,            //设置3秒的写超时
+		Handler:      mux,
+	}
+	http2.ConfigureServer(server, &http2.Server{})
+	log.Fatal(server.ListenAndServeTLS(testdata.Path("server.crt"), testdata.Path("server.key")))
+	log.Fatal(server.ListenAndServe())
 }

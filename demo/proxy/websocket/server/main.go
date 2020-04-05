@@ -44,6 +44,7 @@ func main() {
 	log.SetFlags(0)
 	http.HandleFunc("/echo", echo)
 	http.HandleFunc("/", home)
+	log.Println("Starting websocket server at " + *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
 

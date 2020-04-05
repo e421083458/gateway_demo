@@ -1,6 +1,7 @@
-package middleware
+package main
 
 import (
+	"fmt"
 	"github.com/e421083458/gateway_demo/proxy/middleware"
 	"github.com/e421083458/gateway_demo/proxy/proxy"
 	"log"
@@ -11,7 +12,7 @@ import (
 var addr = "127.0.0.1:2002"
 
 func main() {
-	coreFunc := func(c *middleware.SliceRouterContext) http.Handler {
+	reverseProxy := func(c *middleware.SliceRouterContext) http.Handler {
 		rs1 := "http://127.0.0.1:2003/base"
 		url1, err1 := url.Parse(rs1)
 		if err1 != nil {
@@ -28,12 +29,20 @@ func main() {
 		return proxy.NewMultipleHostsReverseProxy(c, urls)
 	}
 	log.Println("Starting httpserver at " + addr)
-	//routerHandler := common.NewChainRouter(proxy).Use(common.TraceLogChainMW())
-	sliceRouter := middleware.NewSliceRouter()
-	sliceGroup := sliceRouter.Group("/")
-	sliceGroup.Use()
-	sliceRouter.Group("/base").Use(middleware.TraceLogSliceMW())
 
-	routerHandler := middleware.NewSliceRouterHandler(coreFunc, sliceRouter)
+	//初始化方法数组路由器
+	sliceRouter := middleware.NewSliceRouter()
+
+	//中间件可充当业务逻辑代码
+	sliceRouter.Group("/base").Use(middleware.TraceLogSliceMW(), func(c *middleware.SliceRouterContext) {
+		c.Rw.Write([]byte("test func"))
+	})
+
+	//请求到反向代理
+	sliceRouter.Group("/").Use(middleware.TraceLogSliceMW(), func(c *middleware.SliceRouterContext) {
+		fmt.Println("reverseProxy")
+		reverseProxy(c).ServeHTTP(c.Rw, c.Req)
+	})
+	routerHandler := middleware.NewSliceRouterHandler(nil, sliceRouter)
 	log.Fatal(http.ListenAndServe(addr, routerHandler))
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/e421083458/gateway_demo/proxy/public"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -33,11 +32,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	jwtToken, err := public.Encode("foo")
-	if err != nil {
-		panic(err)
-	}
-	req.Header.Set("token", jwtToken)
+	//jwtToken, err := public.Encode("foo")
+	//if err != nil {
+	//	panic(err)
+	//}
+	token:="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJ0ZXN0IiwiZXhwIjoxNTg1Mzc0MTQzLCJpc3MiOiJ0ZXN0In0.ySGLRlSMgOLBz_bRk7puLBHP0AuHjFqVKIgSxlnhTtI"
+	req.Header.Set("Authorization", "Bearer " + token)
 	resp, err := client.Do(req)
 	if err != nil {
 		panic(err)

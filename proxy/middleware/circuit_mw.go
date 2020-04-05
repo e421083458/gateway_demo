@@ -16,13 +16,14 @@ func CircuitMW() func(c *SliceRouterContext) {
 			return nil
 		}, nil)
 		if err != nil {
+			//加入自动降级处理，如获取缓存数据等
 			switch err {
 			case hystrix.ErrCircuitOpen:
 				c.Rw.Write([]byte("circuit error:" + err.Error()))
 			case hystrix.ErrMaxConcurrency:
 				c.Rw.Write([]byte("circuit error:" + err.Error()))
 			default:
-
+				c.Rw.Write([]byte("circuit error:" + err.Error()))
 			}
 			c.Abort()
 		}

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestEncode(t *testing.T) {
+func TestJWTEncode(t *testing.T) {
 	tests := []struct {
 		name string
 		foo  string

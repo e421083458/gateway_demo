@@ -11,8 +11,7 @@ type WeightRoundRobinBalance struct {
 	curIndex int
 	rss      []*WeightNode
 	rsw      []int
-
-	//观察主题
+	//观察主体
 	conf LoadBalanceConf
 }
 

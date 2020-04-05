@@ -1,7 +1,7 @@
 package public
 
 import (
-	"fmt"
+	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -23,7 +23,12 @@ func Decode(tokenString string) (string, error) {
 		return "", err
 	}
 	if claims, ok := token.Claims.(*MyCustomClaims); ok {
-		fmt.Println("expiresAt", claims.StandardClaims.ExpiresAt)
+		if claims.StandardClaims.ExpiresAt < time.Now().Unix() {
+			return "", errors.New("request expired")
+		}
+		if claims.Foo!="test"{
+			return "", errors.New("sign foo error")
+		}
 		return claims.Foo, nil
 	} else {
 		return "", err
@@ -35,7 +40,7 @@ func Encode(foo string) (string, error) {
 	claims := MyCustomClaims{
 		foo,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Second * 10).Unix(),
+			ExpiresAt: time.Now().Add(time.Second * 20).Unix(),
 			Issuer:    "test",
 		},
 	}

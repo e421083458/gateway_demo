@@ -10,8 +10,7 @@ import (
 type RandomBalance struct {
 	curIndex int
 	rss      []string
-
-	//观察主题
+	//观察主体
 	conf LoadBalanceConf
 }
 

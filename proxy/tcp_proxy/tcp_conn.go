@@ -63,11 +63,8 @@ func (c *conn) serve(ctx context.Context) {
 	}()
 	c.remoteAddr = c.rwc.RemoteAddr().String()
 	ctx = context.WithValue(ctx, LocalAddrContextKey, c.rwc.LocalAddr())
-	//fmt.Println("c.rwc.LocalAddr()", c.rwc.LocalAddr())
-	//fmt.Println("c.server.Handler", c.server.Handler)
 	if c.server.Handler == nil {
 		panic("handler empty")
 	}
 	c.server.Handler.ServeTCP(ctx, c.rwc)
-	//fmt.Println("after Handler.ServeTCP")
 }

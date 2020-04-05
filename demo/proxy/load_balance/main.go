@@ -31,7 +31,7 @@ var (
 func NewMultipleHostsReverseProxy(lb load_balance.LoadBalance) *httputil.ReverseProxy {
 	//请求协调者
 	director := func(req *http.Request) {
-		nextAddr, err := lb.Get(req.URL.String())
+		nextAddr, err := lb.Get(req.RemoteAddr)
 		if err != nil {
 			log.Fatal("get next addr fail")
 		}
@@ -94,7 +94,7 @@ func singleJoiningSlash(a, b string) string {
 }
 
 func main() {
-	rb := load_balance.LoadBanlanceFactory(load_balance.LbConsistentHash)
+	rb := load_balance.LoadBanlanceFactory(load_balance.LbWeightRoundRobin)
 	if err := rb.Add("http://127.0.0.1:2003/base", "10"); err != nil {
 		log.Println(err)
 	}
