@@ -24,9 +24,11 @@ const (
 
 func unaryCallWithMetadata(c pb.EchoClient, message string) {
 	fmt.Printf("--- unary ---\n")
+
 	// Create metadata and context.
 	md := metadata.Pairs("timestamp", time.Now().Format(timestampFormat))
 	md.Append("authorization", "Bearer some-secret-token")
+
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 	r, err := c.UnaryEcho(ctx, &pb.EchoRequest{Message: message})
 	if err != nil {
@@ -37,9 +39,11 @@ func unaryCallWithMetadata(c pb.EchoClient, message string) {
 
 func serverStreamingWithMetadata(c pb.EchoClient, message string) {
 	fmt.Printf("--- server streaming ---\n")
+
 	md := metadata.Pairs("timestamp", time.Now().Format(timestampFormat))
 	md.Append("authorization", "Bearer some-secret-token")
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
+
 	stream, err := c.ServerStreamingEcho(ctx, &pb.EchoRequest{Message: message})
 	if err != nil {
 		log.Fatalf("failed to call ServerStreamingEcho: %v", err)

@@ -23,7 +23,6 @@ func main() {
 		if err != nil {
 			log.Fatalln("tSocket error:", err)
 		}
-
 		transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
 		transport, _ := transportFactory.GetTransport(tSocket)
 		protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()

@@ -51,7 +51,7 @@ func (dp *TcpReverseProxy) dialContext() func(ctx context.Context, network, addr
 	}
 	return (&net.Dialer{
 		Timeout:   dp.DialTimeout,     //连接超时
-		KeepAlive: dp.KeepAlivePeriod, //长连接超时时间
+		KeepAlive: dp.KeepAlivePeriod, //设置连接的检测时长
 	}).DialContext
 }
 

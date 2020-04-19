@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	//获取zk节点列表
 	zkManager := zookeeper.NewZkManager([]string{"127.0.0.1:2181"})
 	zkManager.GetConnect()
 	defer zkManager.Close()
@@ -15,7 +14,6 @@ func main() {
 
 	for {
 		conf := fmt.Sprintf("{name:" + fmt.Sprint(i) + "}")
-		fmt.Println(conf)
 		zkManager.SetPathData("/rs_server_conf", []byte(conf), int32(i))
 		time.Sleep(5 * time.Second)
 		i++

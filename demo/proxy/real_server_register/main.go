@@ -16,8 +16,8 @@ func main() {
 	rs1 := &RealServer{Addr: "127.0.0.1:2003"}
 	rs1.Run()
 	time.Sleep(2 * time.Second)
-	rs2 := &RealServer{Addr: "127.0.0.1:2004"}
-	rs2.Run()
+	//rs2 := &RealServer{Addr: "127.0.0.1:2004"}
+	//rs2.Run()
 	time.Sleep(2 * time.Second)
 
 	//监听关闭信号
@@ -48,11 +48,11 @@ func (r *RealServer) Run() {
 			fmt.Printf(" connect zk error: %s ", err)
 		}
 		defer zkManager.Close()
-		err = zkManager.RegistServerPath("/rs_server", r.Addr)
+		err = zkManager.RegistServerPath("/real_server", r.Addr)
 		if err != nil {
 			fmt.Printf(" regist node error: %s ", err)
 		}
-		zlist, err := zkManager.GetServerListByPath("/rs_server")
+		zlist, err := zkManager.GetServerListByPath("/real_server")
 		fmt.Println(zlist)
 		log.Fatal(server.ListenAndServe())
 	}()

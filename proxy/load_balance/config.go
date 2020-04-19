@@ -42,7 +42,6 @@ func (s *LoadBalanceZkConf) GetConf() []string {
 }
 
 //更新配置时，通知监听者也更新
-//todo 这里可以做成自动检活
 func (s *LoadBalanceZkConf) WatchConf() {
 	zkManager := zookeeper.NewZkManager(s.zkHosts)
 	zkManager.GetConnect()

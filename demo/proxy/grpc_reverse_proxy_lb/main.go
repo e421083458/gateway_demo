@@ -17,6 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
 	rb := load_balance.LoadBanlanceFactory(load_balance.LbWeightRoundRobin)
 	rb.Add("127.0.0.1:50055", "40")
 
@@ -30,5 +31,3 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
-
-

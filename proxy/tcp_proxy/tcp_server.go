@@ -31,7 +31,6 @@ type TcpServer struct {
 
 	//DialTimeout time.Duration
 	//DialContext func(ctx context.Context, network, addr string) (net.Conn, error) //下游参数
-
 	mu         sync.Mutex
 	inShutdown int32
 	doneChan   chan struct{}

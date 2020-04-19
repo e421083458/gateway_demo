@@ -29,7 +29,7 @@ func main() {
 	}
 	handler := &FormatDataImpl{}
 	processor := thrift_gen.NewFormatDataProcessor(handler)
-	serverTransport, err := thrift.NewTServerSocket(*addr)
+	serverSocket, err := thrift.NewTServerSocket(*addr)
 	if err != nil {
 		log.Fatalln("Error:", err)
 	}
@@ -37,7 +37,8 @@ func main() {
 	transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
 	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
 
-	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
+	server := thrift.NewTSimpleServer4(processor, serverSocket, transportFactory, protocolFactory)
 	fmt.Println("Running at:", *addr)
 	server.Serve()
 }
+
