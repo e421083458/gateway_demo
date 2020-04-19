@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var addr = flag.String("addr", "localhost:50051", "the address to connect to")
+var addr = flag.String("addr", "localhost:8012", "the address to connect to")
 
 const (
 	timestampFormat = time.StampNano // "Jan _2 15:04:05.000"

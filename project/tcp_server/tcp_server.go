@@ -24,6 +24,7 @@ type TcpServer struct {
 	Addr    string
 	Handler TCPHandler
 	err     error
+	BaseCtx context.Context
 
 	WriteTimeout     time.Duration
 	ReadTimeout      time.Duration
@@ -66,7 +67,10 @@ func (srv *TcpServer) Close() error {
 func (srv *TcpServer) Serve(l net.Listener) error {
 	srv.l = &onceCloseListener{Listener: l}
 	defer srv.l.Close()
-	baseCtx := context.Background()
+	if srv.BaseCtx == nil {
+		srv.BaseCtx = context.Background()
+	}
+	baseCtx := srv.BaseCtx
 	ctx := context.WithValue(baseCtx, ServerContextKey, srv)
 	for {
 		rw, e := l.Accept()

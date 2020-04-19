@@ -26,7 +26,9 @@ func main() {
 	counter, _ := public.NewFlowCountService("local_app", time.Second)
 	grpcHandler := proxy2.NewGrpcLoadBalanceHandler(rb)
 	s := grpc.NewServer(
-		grpc.ChainStreamInterceptor(grpc_interceptor.GrpcAuthStreamInterceptor, grpc_interceptor.GrpcFlowCountStreamInterceptor(counter)), //流式方法拦截
+		grpc.ChainStreamInterceptor(
+			grpc_interceptor.GrpcAuthStreamInterceptor,
+			grpc_interceptor.GrpcFlowCountStreamInterceptor(counter)), //流式方法拦截
 		grpc.CustomCodec(proxy.Codec()),           			//自定义codec
 		grpc.UnknownServiceHandler(grpcHandler)) //自定义全局回调
 

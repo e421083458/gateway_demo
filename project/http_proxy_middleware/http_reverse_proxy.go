@@ -21,9 +21,9 @@ func HttpReverseProxyMiddleware() gin.HandlerFunc {
 		serviceDetail := tmp.(*dao.ServiceDetail)
 
 		//设置负载均衡策略
-		lb, err := serviceDetail.GetLoadBalancer()
+		lb, err := serviceDetail.GetHttpLoadBalancer()
 		if err != nil {
-			middleware.ResponseError(c, 1002, errors.WithMessage(err, "GetLoadBalancer"))
+			middleware.ResponseError(c, 1002, errors.WithMessage(err, "GetHttpLoadBalancer"))
 			c.Abort()
 			return
 		}

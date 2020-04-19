@@ -3,18 +3,18 @@ package reverse_proxy
 import (
 	"context"
 	"github.com/e421083458/gateway_demo/project/load_balance"
-	"github.com/e421083458/gateway_demo/proxy/tcp_middleware"
+	"github.com/e421083458/gateway_demo/project/tcp_proxy_middleware"
 	"io"
 	"log"
 	"net"
 	"time"
 )
 
-func NewTcpLoadBalanceReverseProxy(c *tcp_middleware.TcpSliceRouterContext, lb load_balance.LoadBalance) *TcpReverseProxy {
+func NewTcpLoadBalanceReverseProxy(c *tcp_proxy_middleware.TcpSliceRouterContext, lb load_balance.LoadBalance) *TcpReverseProxy {
 	return func() *TcpReverseProxy {
 		nextAddr, err := lb.Get("")
 		if err != nil {
-			log.Fatal("get next addr fail")
+			log.Fatal("tcp proxy get next addr fail")
 		}
 		return &TcpReverseProxy{
 			ctx:             c.Ctx,

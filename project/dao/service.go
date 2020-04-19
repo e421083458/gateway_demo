@@ -22,7 +22,17 @@ type ServiceDetail struct {
 	AccessControl *AccessControl `json:"access_control" toml:"access_control"`
 }
 
-func (t *ServiceDetail) GetLoadBalancer() (load_balance.LoadBalance, error) {
+func (t *ServiceDetail) GetTcpLoadBalancer() (load_balance.LoadBalance, error) {
+	lb := load_balance.LoadBanlanceFactory(load_balance.LbType(t.LoadBalance.RoundType))
+	for index, ip := range t.LoadBalance.GetIPListByModel() {
+		lb.Add(ip, t.LoadBalance.GetWeightListByModel()[index])
+	}
+	lbip, _ := lb.Get("")
+	fmt.Println("GetTcpLoadBalancer.Get()", lbip)
+	return lb, nil
+}
+
+func (t *ServiceDetail) GetHttpLoadBalancer() (load_balance.LoadBalance, error) {
 	lb := load_balance.LoadBanlanceFactory(load_balance.LbType(t.LoadBalance.RoundType))
 	schema := "http"
 	if t.HttpRule.NeedHttps == 1 {
@@ -32,7 +42,7 @@ func (t *ServiceDetail) GetLoadBalancer() (load_balance.LoadBalance, error) {
 		lb.Add(schema+"://"+ip, t.LoadBalance.GetWeightListByModel()[index])
 	}
 	lbip, _ := lb.Get("")
-	fmt.Println("lb.Get()", lbip)
+	fmt.Println("GetHttpLoadBalancer.Get()", lbip)
 	return lb, nil
 }
 
@@ -56,6 +66,26 @@ func NewServiceManager() *ServiceManager {
 		serviceSlice:   []*ServiceDetail{},
 		serviceMapLock: sync.RWMutex{},
 	}
+}
+
+func (s *ServiceManager) GetTcpServiceList() []*ServiceDetail {
+	serviceList := []*ServiceDetail{}
+	for _, info := range s.serviceSlice {
+		if info.Info.LoadType == public.LoadTypeTCP {
+			serviceList = append(serviceList, info)
+		}
+	}
+	return serviceList
+}
+
+func (s *ServiceManager) GetGrpcServiceList() []*ServiceDetail {
+	serviceList := []*ServiceDetail{}
+	for _, info := range s.serviceSlice {
+		if info.Info.LoadType == public.LoadTypeGRPC {
+			serviceList = append(serviceList, info)
+		}
+	}
+	return serviceList
 }
 
 func (s *ServiceManager) MatchAccessMode(c *gin.Context) (*ServiceDetail, error) {

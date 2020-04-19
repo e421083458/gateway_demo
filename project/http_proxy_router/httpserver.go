@@ -27,9 +27,9 @@ func HttpServerRun() {
 		MaxHeaderBytes: 1 << uint(lib.GetIntConf("proxy.http.max_header_bytes")),
 	}
 	go func() {
-		log.Printf(" [INFO] http_proxy_run:%s\n", lib.GetStringConf("proxy.http.addr"))
+		log.Printf(" [INFO] http_proxy_run %s\n", lib.GetStringConf("proxy.http.addr"))
 		if err := HttpSrvHandler.ListenAndServe(); err != nil {
-			log.Fatalf(" [ERROR] http_proxy_run:%s err:%v\n", lib.GetStringConf("proxy.http.addr"), err)
+			log.Fatalf(" [ERROR] http_proxy_run %s err:%v\n", lib.GetStringConf("proxy.http.addr"), err)
 		}
 	}()
 }
@@ -54,9 +54,9 @@ func HttpSSLServerRun() {
 		MaxHeaderBytes: 1 << uint(lib.GetIntConf("proxy.http.max_header_bytes")),
 	}
 	go func() {
-		log.Printf(" [INFO] https_proxy_run:%s\n", lib.GetStringConf("proxy.http.ssl_addr"))
+		log.Printf(" [INFO] https_proxy_run %s\n", lib.GetStringConf("proxy.http.ssl_addr"))
 		if err := HttpSSLSrvHandler.ListenAndServeTLS(cert_file.Path("server.crt"), cert_file.Path("server.key")); err != nil {
-			log.Fatalf(" [ERROR] https_proxy_run:%s err:%v\n", lib.GetStringConf("proxy.http.ssl_addr"), err)
+			log.Fatalf(" [ERROR] https_proxy_run %s err:%v\n", lib.GetStringConf("proxy.http.ssl_addr"), err)
 		}
 	}()
 }
