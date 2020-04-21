@@ -59,7 +59,7 @@ func (admin *ServiceController) ServiceList(c *gin.Context) {
 		}
 
 		totalNode := len(detail.LoadBalance.GetIPListByModel())
-		serviceCounter, _ := public.FlowCounterHandler.GetCounter(public.FlowCountServicePrefix+item.ServiceName)
+		serviceCounter, _ := public.FlowCounterHandler.GetCounter(public.FlowServicePrefix +item.ServiceName)
 		qps := serviceCounter.GetQPS()
 		qpd, _ := serviceCounter.GetDayCount(time.Now())
 
@@ -134,7 +134,7 @@ func (admin *ServiceController) ServiceStatistics(c *gin.Context) {
 		return
 	}
 
-	counter, _ := public.FlowCounterHandler.GetCounter(public.FlowCountServicePrefix + detail.Info.ServiceName)
+	counter, _ := public.FlowCounterHandler.GetCounter(public.FlowServicePrefix + detail.Info.ServiceName)
 
 	//今日流量全天小时级访问统计
 	todayStat := []int64{}

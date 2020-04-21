@@ -4,7 +4,6 @@ require (
 	git.apache.org/thrift.git v0.12.0
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/didi/gatekeeper v0.1.1
 	github.com/e421083458/golang_common v1.1.1
 	github.com/e421083458/gorm v1.0.1
 	github.com/e421083458/grpc-proxy v0.0.0-20200322121256-d002dd677447
@@ -25,6 +24,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f // indirect
 	golang.org/x/net v0.0.0-20191207000613-e7e4b65ae663
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c

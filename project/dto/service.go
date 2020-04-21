@@ -12,6 +12,21 @@ type ServiceListInput struct {
 	PageNo   int    `json:"page_no" form:"page_no" comment:"页码" validate:"required,min=1,max=999"`
 }
 
+type ServiceLoadTypeStat struct {
+	LoadType int `json:"load_type" form:"load_type" comment:"负载类型"`
+	Num      int `json:"num" form:"num" comment:"服务数量"`
+}
+
+type ServiceStatOutput struct {
+	Legend []string                `json:"legend" form:"legend" comment:"负载数量"`
+	Data   []ServiceStatItemOutput `json:"data" form:"data" comment:"统计详情"`
+}
+
+type ServiceStatItemOutput struct {
+	Value int    `json:"value" form:"value" comment:"负载数量"`
+	Name  string `json:"name" form:"name" comment:"负载类型"`
+}
+
 func (params *ServiceListInput) GetValidParams(c *gin.Context) error {
 	return public.DefaultGetValidParams(c, params)
 }

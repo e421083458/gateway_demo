@@ -40,7 +40,7 @@ func (admin *APPController) APPList(c *gin.Context) {
 
 	outputList := []dto.APPListItemOutput{}
 	for _, item := range list {
-		serviceCounter, _ := public.FlowCounterHandler.GetCounter(item.AppID)
+		serviceCounter, _ := public.FlowCounterHandler.GetCounter(public.FlowAPPPrefix + item.AppID)
 		realQps := serviceCounter.GetQPS()
 		realQpd, _ := serviceCounter.GetDayCount(time.Now())
 		outputList = append(outputList, dto.APPListItemOutput{
@@ -181,7 +181,7 @@ func (admin *APPController) AppStatistics(c *gin.Context) {
 		return
 	}
 
-	counter, _ := public.FlowCounterHandler.GetCounter(public.FlowCountAPPPrefix + detail.AppID)
+	counter, _ := public.FlowCounterHandler.GetCounter(public.FlowAPPPrefix + detail.AppID)
 
 	//今日流量全天小时级访问统计
 	todayStat := []int64{}

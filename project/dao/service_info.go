@@ -81,3 +81,12 @@ func (t *ServiceInfo) ServiceList(c *gin.Context, tx *gorm.DB, params *dto.Servi
 	}
 	return list, count, nil
 }
+
+func (t *ServiceInfo) ServiceLoadType(c *gin.Context, tx *gorm.DB) ([]dto.ServiceLoadTypeStat, error) {
+	var list []dto.ServiceLoadTypeStat
+	tx = tx.SetCtx(public.GetGinTraceContext(c))
+	if err := tx.Table(t.TableName()).Select("load_type, count(load_type) as num").Where("is_delete=0").Group("load_type").Scan(&list).Error; err != nil {
+		return nil, err
+	}
+	return list, nil
+}

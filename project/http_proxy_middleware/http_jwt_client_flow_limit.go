@@ -9,25 +9,24 @@ import (
 	"github.com/pkg/errors"
 )
 
-func HttpClientFlowLimitMiddleware() gin.HandlerFunc {
+func HttpJwtClientFlowLimitMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tmp, ok := c.Get("service_detail")
+		tmp, ok := c.Get("app_detail")
 		if !ok {
-			middleware.ResponseError(c, 1001, errors.New("HttpClientFlowLimitMiddleware get service_detail error"))
-			c.Abort()
+			c.Next()
 			return
 		}
 
-		serviceDetail := tmp.(*dao.ServiceDetail)
-		clientIPLimit := serviceDetail.AccessControl.ClientIPFlowLimit
+		appDetail := tmp.(*dao.App)
+		clientIPLimit := appDetail.Qps
 		remoteIP := c.ClientIP()
 		if clientIPLimit > 0 {
 			limiter, err := public.FlowLimiterHandler.GetLimiter(
-				public.FlowServicePrefix+serviceDetail.Info.ServiceName+remoteIP,
+				public.FlowAPPPrefix+appDetail.AppID+remoteIP,
 				float64(clientIPLimit),
 				int(clientIPLimit*3))
 			if err != nil {
-				middleware.ResponseError(c, 1002, errors.WithMessage(err, "HttpClientFlowLimitMiddleware get GetLimiter error"))
+				middleware.ResponseError(c, 1002, errors.WithMessage(err, "HttpJwtClientFlowLimitMiddleware get GetLimiter error"))
 				c.Abort()
 				return
 			}

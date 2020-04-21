@@ -35,6 +35,9 @@ func GrpcServerRun() {
 			grpcHandler := reverse_proxy.NewGrpcLoadBalanceHandler(rb)
 			s := grpc.NewServer(
 				grpc.ChainStreamInterceptor(
+					grpc_proxy_middleware.GrpcJwtAuthTokenMiddleware(service),
+					grpc_proxy_middleware.GrpcJwtClientFlowLimitMiddleware(service),
+					grpc_proxy_middleware.GrpcJwtServerFlowCountMiddleware(service),
 					grpc_proxy_middleware.GrpcServerFlowCountMiddleware(service),
 					grpc_proxy_middleware.GrpcClientFlowLimitMiddleware(service),
 					grpc_proxy_middleware.GrpcServerFlowLimitMiddleware(service),

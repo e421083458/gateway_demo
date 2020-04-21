@@ -51,4 +51,11 @@ func (r *RoundRobinBalance) Update() {
 			r.Add(strings.Split(ip, ",")...)
 		}
 	}
+	if conf, ok := r.conf.(*LoadBalanceCheckConf); ok {
+		fmt.Println("Update get conf:", conf.GetConf())
+		r.rss = nil
+		for _, ip := range conf.GetConf() {
+			r.Add(strings.Split(ip, ",")...)
+		}
+	}
 }

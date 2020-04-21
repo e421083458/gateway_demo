@@ -8,9 +8,10 @@ const (
 	RedisFlowCountDayKey  = "flow_count_day"
 	RedisFlowCountHourKey = "flow_count_hour"
 
-	//flow_count_prefix
-	FlowCountServicePrefix = "service_"
-	FlowCountAPPPrefix     = "app_"
+	//flow_limit_prefix
+	FlowServicePrefix = "service_"
+	FlowAPPPrefix     = "app_"
+	FlowTotal         = "total"
 
 	//sessionKey
 	AdminInfoSessionKey = "admin_info"
@@ -21,7 +22,14 @@ const (
 	LoadTypeGRPC = 2
 
 	//default check setting
-	DefaultCheckMethod   = 0
-	DefaultCheckTimeout  = 2
-	DefaultCheckInterval = 5
+	DefaultCheckMethod    = 0
+	DefaultCheckTimeout   = 2
+	DefaultCheckMaxErrNum = 2
+	DefaultCheckInterval  = 5
 )
+
+var LoadTypeMap = map[int]string{
+	LoadTypeHTTP: "HTTP",
+	LoadTypeTCP:  "TCP",
+	LoadTypeGRPC: "GRPC",
+}

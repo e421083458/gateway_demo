@@ -10,7 +10,13 @@ import (
 //流量统计
 func GrpcServerFlowCountMiddleware(serviceDetail *dao.ServiceDetail) func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-		counter, err := public.FlowCounterHandler.GetCounter(public.FlowCountServicePrefix + serviceDetail.Info.ServiceName)
+		totalCounter, err := public.FlowCounterHandler.GetCounter(public.FlowTotal)
+		if err != nil {
+			return err
+		}
+		totalCounter.Increase()
+
+		counter, err := public.FlowCounterHandler.GetCounter(public.FlowServicePrefix + serviceDetail.Info.ServiceName)
 		if err != nil {
 			return err
 		}

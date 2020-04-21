@@ -3,8 +3,11 @@ package dao
 import (
 	"github.com/e421083458/gateway_demo/project/dto"
 	"github.com/e421083458/gateway_demo/project/public"
+	"github.com/e421083458/golang_common/lib"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"net/http/httptest"
+	"sync"
 	"time"
 )
 
@@ -61,4 +64,53 @@ func (t *App) APPList(c *gin.Context, tx *gorm.DB, params *dto.APPListInput) ([]
 		return nil, 0, err
 	}
 	return list, count, nil
+}
+
+var AppHandler *AppManager
+
+type AppManager struct {
+	appMap     map[string]*App
+	appSlice   []*App
+	appMapLock sync.RWMutex
+	init       sync.Once
+	err        error
+}
+
+func init() {
+	AppHandler = NewAppManager()
+}
+
+func NewAppManager() *AppManager {
+	return &AppManager{
+		appMap:     make(map[string]*App),
+		appSlice:   []*App{},
+		appMapLock: sync.RWMutex{},
+	}
+}
+
+func (s *AppManager) GetAppList() []*App {
+	return s.appSlice
+}
+
+func (s *AppManager) LoadOnce() error {
+	s.init.Do(func() {
+		model := App{}
+		c, _ := gin.CreateTestContext(httptest.NewRecorder())
+		c.Set("trace", lib.NewTrace())
+		params := &dto.APPListInput{PageSize: 99999, PageNo: 1}
+		list, _, err := model.APPList(c, lib.GORMDefaultPool, params)
+		if err != nil {
+			s.err = err
+			return
+		}
+		s.appMapLock.Lock()
+		defer s.appMapLock.Unlock()
+		for _, item := range list {
+			tmp:=item
+			s.appMap[item.AppID] = &tmp
+			s.appSlice = append(s.appSlice, &tmp)
+		}
+		return
+	})
+	return s.err
 }

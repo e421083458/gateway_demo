@@ -24,7 +24,7 @@ func TcpServerFlowLimitMiddleware() func(c *TcpSliceRouterContext) {
 		fmt.Println("remoteIP", remoteIP)
 		if clientIPLimit > 0 {
 			limiter, err := public.FlowLimiterHandler.GetLimiter(
-				public.FlowCountServicePrefix+serviceDetail.Info.ServiceName+remoteIP,
+				public.FlowServicePrefix+serviceDetail.Info.ServiceName+remoteIP,
 				float64(clientIPLimit),
 				int(clientIPLimit*3))
 			if err != nil {

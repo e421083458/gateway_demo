@@ -17,9 +17,17 @@ func TcpServerFlowCountMiddleware() func(c *TcpSliceRouterContext) {
 		}
 		serviceDetail := tmp.(*dao.ServiceDetail)
 
-		counter, err := public.FlowCounterHandler.GetCounter(public.FlowCountServicePrefix + serviceDetail.Info.ServiceName)
+		totalCounter, err := public.FlowCounterHandler.GetCounter(public.FlowTotal)
 		if err != nil {
-			c.conn.Write([]byte("HttpServerFlowCountMiddleware get GetCounter error"))
+			c.conn.Write([]byte(err.Error()))
+			c.Abort()
+			return
+		}
+		totalCounter.Increase()
+
+		counter, err := public.FlowCounterHandler.GetCounter(public.FlowServicePrefix + serviceDetail.Info.ServiceName)
+		if err != nil {
+			c.conn.Write([]byte(err.Error()))
 			c.Abort()
 			return
 		}

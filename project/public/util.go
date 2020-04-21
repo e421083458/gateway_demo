@@ -3,6 +3,7 @@ package public
 import (
 	"crypto/md5"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"io"
 )
@@ -34,4 +35,13 @@ func InStringList(t string, list []string) bool {
 		}
 	}
 	return false
+}
+
+//对象打印
+func Obj2Json(a interface{}) string {
+	bs, err := json.Marshal(a)
+	if err != nil {
+		return ""
+	}
+	return string(bs)
 }

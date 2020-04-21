@@ -21,7 +21,7 @@ func HttpServerFlowLimitMiddleware() gin.HandlerFunc {
 		serviceDetail := tmp.(*dao.ServiceDetail)
 		serverLimit := serviceDetail.AccessControl.ServiceFlowLimit
 		if serverLimit > 0 {
-			limiter, err := public.FlowLimiterHandler.GetLimiter(public.FlowCountServicePrefix+serviceDetail.Info.ServiceName, float64(serverLimit), int(serverLimit*3))
+			limiter, err := public.FlowLimiterHandler.GetLimiter(public.FlowServicePrefix+serviceDetail.Info.ServiceName, float64(serverLimit), int(serverLimit*3))
 			if err != nil {
 				middleware.ResponseError(c, 1002, errors.WithMessage(err, "HttpServerFlowLimitMiddleware get GetLimiter error"))
 				c.Abort()

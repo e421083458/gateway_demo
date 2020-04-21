@@ -25,7 +25,7 @@ func GrpcServerFlowLimitMiddleware(serviceDetail *dao.ServiceDetail) func(srv in
 		serverLimit := serviceDetail.AccessControl.ServiceFlowLimit
 		if serverLimit > 0 {
 			limiter, err := public.FlowLimiterHandler.GetLimiter(
-				public.FlowCountServicePrefix+serviceDetail.Info.ServiceName+clientIP,
+				public.FlowServicePrefix+serviceDetail.Info.ServiceName+clientIP,
 				float64(serverLimit),
 				int(serverLimit*3))
 			if err != nil {

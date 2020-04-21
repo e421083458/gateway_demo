@@ -30,7 +30,7 @@ func GrpcMetaTransferMiddleware(serviceDetail *dao.ServiceDetail) func(srv inter
 			fmt.Println("metadata after", md)
 		}
 
-		counter, err := public.FlowCounterHandler.GetCounter(public.FlowCountServicePrefix + serviceDetail.Info.ServiceName)
+		counter, err := public.FlowCounterHandler.GetCounter(public.FlowServicePrefix + serviceDetail.Info.ServiceName)
 		if err != nil {
 			return err
 		}

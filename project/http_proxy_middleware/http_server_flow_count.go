@@ -18,9 +18,18 @@ func HttpServerFlowCountMiddleware() gin.HandlerFunc {
 		}
 
 		serviceDetail := tmp.(*dao.ServiceDetail)
-		counter, err := public.FlowCounterHandler.GetCounter(public.FlowCountServicePrefix + serviceDetail.Info.ServiceName)
+
+		totalCounter, err := public.FlowCounterHandler.GetCounter(public.FlowTotal)
 		if err != nil {
 			middleware.ResponseError(c, 1002, errors.WithMessage(err, "HttpServerFlowCountMiddleware get GetCounter error"))
+			c.Abort()
+			return
+		}
+		totalCounter.Increase()
+
+		counter, err := public.FlowCounterHandler.GetCounter(public.FlowServicePrefix + serviceDetail.Info.ServiceName)
+		if err != nil {
+			middleware.ResponseError(c, 1003, errors.WithMessage(err, "HttpServerFlowCountMiddleware get GetCounter error"))
 			c.Abort()
 			return
 		}

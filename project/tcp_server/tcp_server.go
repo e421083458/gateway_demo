@@ -123,6 +123,6 @@ func (s *TcpServer) getDoneChanLocked() chan struct{} {
 }
 
 func ListenAndServe(addr string, handler TCPHandler) error {
-	server := &TcpServer{Addr: addr, Handler: handler}
+	server := &TcpServer{Addr: addr, Handler: handler, doneChan: make(chan struct{}),}
 	return server.ListenAndServe()
 }

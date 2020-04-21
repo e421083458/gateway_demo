@@ -37,21 +37,25 @@ func LoadBanlanceFactorWithConf(lbType LbType, mConf LoadBalanceConf) LoadBalanc
 		lb := NewConsistentHashBanlance(10, nil)
 		lb.SetConf(mConf)
 		mConf.Attach(lb)
+		lb.Update()
 		return lb
 	case LbRoundRobin:
 		lb := &RoundRobinBalance{}
 		lb.SetConf(mConf)
 		mConf.Attach(lb)
+		lb.Update()
 		return lb
 	case LbWeightRoundRobin:
 		lb := &WeightRoundRobinBalance{}
 		lb.SetConf(mConf)
 		mConf.Attach(lb)
+		lb.Update()
 		return lb
 	default:
 		lb := &RandomBalance{}
 		lb.SetConf(mConf)
 		mConf.Attach(lb)
+		lb.Update()
 		return lb
 	}
 }
