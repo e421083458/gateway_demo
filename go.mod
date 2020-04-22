@@ -30,4 +30,3 @@ require (
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )
 
-replace github.com/e421083458/gateway_demo => ./
