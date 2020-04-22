@@ -14,7 +14,7 @@
 └── proxy           公共类库
 ```
 
-### 使用goland 运行后端代码
+### 运行后端代码
 
 - 首先git clone 本项目
 
@@ -34,6 +34,10 @@ export GO111MODULE=on && export GOPROXY=https://goproxy.cn
 cd gateway_demo
 go mod tidy
 ```
+
+- 在相应功能文件夹下，执行 `go run main.go` 即可。
+
+## goland编辑器配置
 
 - 用 goland 打开项目目录
 

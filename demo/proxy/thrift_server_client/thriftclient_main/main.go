@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	addr := flag.String("addr", "127.0.0.1:2002", "input addr")
+	addr := flag.String("addr", "127.0.0.1:6001", "input addr")
 	flag.Parse()
 	if *addr == "" {
 		flag.Usage()
