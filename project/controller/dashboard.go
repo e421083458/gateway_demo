@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/e421083458/gateway_demo/project/dao"
 	"github.com/e421083458/gateway_demo/project/dto"
 	"github.com/e421083458/gateway_demo/project/middleware"
@@ -99,7 +98,7 @@ func (admin *DashBoardController) ServiceStat(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("loadTypes", loadTypes)
+	//fmt.Println("loadTypes", loadTypes)
 	ServiceStats := dto.ServiceStatOutput{}
 	for _, loadType := range loadTypes {
 		ServiceStats.Legend = append(ServiceStats.Legend, public.LoadTypeMap[loadType.LoadType])

@@ -19,8 +19,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	rb := load_balance.LoadBanlanceFactorWithConf(load_balance.LbWeightRoundRobin, mConf)
-	proxy := proxy2.NewLoadBalanceReverseProxy(&middleware.SliceRouterContext{}, rb)
+	rb := load_balance.LoadBanlanceFactorWithConf(
+		load_balance.LbWeightRoundRobin, mConf)
+	proxy := proxy2.NewLoadBalanceReverseProxy(
+		&middleware.SliceRouterContext{}, rb)
 	log.Println("Starting httpserver at " + addr)
 	log.Fatal(http.ListenAndServe(addr, proxy))
 }
+
+
+
