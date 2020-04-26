@@ -2,11 +2,18 @@ package load_balance
 
 import (
 	"fmt"
-	"github.com/e421083458/gateway_demo/project/public"
 	"net"
 	"reflect"
 	"sort"
 	"time"
+)
+
+const (
+	//default check setting
+	DefaultCheckMethod    = 0
+	DefaultCheckTimeout   = 2
+	DefaultCheckMaxErrNum = 2
+	DefaultCheckInterval  = 5
 )
 
 type LoadBalanceCheckConf struct {
@@ -46,7 +53,7 @@ func (s *LoadBalanceCheckConf) WatchConf() {
 		for {
 			changedList := []string{}
 			for item, _ := range s.confIpWeight {
-				conn, err := net.DialTimeout("tcp", item, time.Duration(public.DefaultCheckTimeout)*time.Second)
+				conn, err := net.DialTimeout("tcp", item, time.Duration(DefaultCheckTimeout)*time.Second)
 				//todo http statuscode
 				if err == nil {
 					conn.Close()
@@ -61,7 +68,7 @@ func (s *LoadBalanceCheckConf) WatchConf() {
 						confIpErrNum[item] = 1
 					}
 				}
-				if confIpErrNum[item] < public.DefaultCheckMaxErrNum {
+				if confIpErrNum[item] < DefaultCheckMaxErrNum {
 					changedList = append(changedList, item)
 				}
 			}
@@ -70,7 +77,7 @@ func (s *LoadBalanceCheckConf) WatchConf() {
 			if !reflect.DeepEqual(changedList, s.activeList) {
 				s.UpdateConf(changedList)
 			}
-			time.Sleep(time.Duration(public.DefaultCheckInterval) * time.Second)
+			time.Sleep(time.Duration(DefaultCheckInterval) * time.Second)
 		}
 	}()
 }
