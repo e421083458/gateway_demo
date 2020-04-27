@@ -73,7 +73,7 @@ udp服务端| [源代码](https://github.com/e421083458/gateway_demo/tree/master
 
 项目的预览地址：http://gateway.itpp.cn:9527/
 
-电子邮箱：e421083458@163.com
+电子邮箱：niuyufu@didiglobal.com(招php、golang中简历砸过来)
 
 微信公众号：
 
