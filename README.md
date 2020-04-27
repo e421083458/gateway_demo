@@ -22,22 +22,59 @@
 
 第1-8章节功能演示代码：https://github.com/e421083458/gateway_demo
 
-项目的后端项目：https://github.com/e421083458/go_gateway
+完整后端项目：https://github.com/e421083458/go_gateway
 
-项目的前端项目：https://github.com/e421083458/go_gateway_view
+完整前端项目：https://github.com/e421083458/go_gateway_view
 
 项目的预览地址：http://gateway.itpp.cn:9527/
 
 电子邮箱：e421083458@163.com
 
 微信公众号：
-![image](https://raw.githubusercontent.com/e421083458/gateway_demo/master/qrcode.jpg)
 
-## 章节功能对应对应源码
+![image](http://chuantu.xyz/t6/731/1587960911x3030586988.jpg)
+
+## 功能对应对应源码
 
 功能点 | 地址
 ---|---
-正在补充... | 正在补充...
+函数是一等公民 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/functional
+http客户端 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/http_client
+http服务端 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/http_server
+tcp客户端 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/tcp_client
+tcp代理 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/tcp_proxy
+tcp服务器 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/tcp_server
+udp客户端 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/udp_client
+udp服务端 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/udp_server
+自定义协议获取完整报文 | https://github.com/e421083458/gateway_demo/tree/master/demo/base/unpack
+熔断器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/circuit_breaker
+单机流量统计 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/flow_count
+浏览器正常代理 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/forward_proxy
+grpc反向代理 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/grpc_reverse_proxy
+grpc反向代理整合中间件 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/grpc_reverse_proxy_advance
+grpc反向代理整合负载均衡器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/grpc_reverse_proxy_lb
+grpc测试服务器、客户端、grpc-gateway | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/grpc_server_client
+负载均衡器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/load_balance
+负载均衡主动探测 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/load_balance_client_discovery
+负载均衡服务发现 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/load_balance_server_discovery
+中间件实现 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/middleware
+观察者模式 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/observer
+限流器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/rate_limiter
+测试下游服务器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/real_server
+测试下游服务器+服务注册 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/real_server_register
+分布式流量统计 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/redis_flow_count
+http反向代理实现 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/reverse_proxy
+http反向代理简单版 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/reverse_proxy_simple
+http2反向代理 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/reverse_proxy_http2
+https反向代理 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/reverse_proxy_https
+http反向代理基本功能 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/reverse_proxy_base
+http反向代理权限校验 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/security_check
+tcp代理服务器实现 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/tcp_proxy
+thrift服务器与客户端 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/thrift_server_client
+websocket代理服务器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/websocket
+websocket代理服务器 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/websocket
+zookeeper基本使用 | https://github.com/e421083458/gateway_demo/tree/master/demo/proxy/zookeeper
+其他正在补充... | 其他正在补充...
 
 ## 代码帮助
 
