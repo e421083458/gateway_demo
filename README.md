@@ -69,7 +69,7 @@ tcp自定义协议获取完整报文| [源代码](https://github.com/e421083458/
 
 完整前端项目：https://github.com/e421083458/go_gateway_view
 
-思维导图：http://naotu.baidu.com/file/0abcf68f3bd03964a63c8c35b44d681d?token=864a35c5e3647e34
+思维导图：[点击查看](http://naotu.baidu.com/file/0abcf68f3bd03964a63c8c35b44d681d?token=864a35c5e3647e34)
 
 项目的预览地址：http://gateway.itpp.cn:9527/
 
