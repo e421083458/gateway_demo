@@ -8,7 +8,16 @@ import (
 	"strings"
 )
 
-func main() {
+func main()  {
+	doSend()
+	fmt.Print("doSend over")
+	doSend()
+	fmt.Print("doSend over")
+	//select {}
+}
+
+
+func doSend() {
 	//1、连接服务器
 	conn, err := net.Dial("tcp", "localhost:9090")
 	defer conn.Close()	//思考题：这里不填写会有啥问题？
