@@ -26,7 +26,7 @@ func main() {
 		Transport: transport,
 	}
 	// 请求数据
-	resp, err := client.Get("http://127.0.0.1:1210/bye");
+	resp, err := client.Get("http://127.0.0.1:1210/bye")
 	if err != nil {
 		panic(err)
 	}
