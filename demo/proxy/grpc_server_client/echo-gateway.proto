@@ -5,7 +5,7 @@ package echo;
 // 添加部分
 import "google/api/annotations.proto";
 
-option go_package = "proto";
+option go_package = ".;proto";
 
 // EchoRequest is the request for echo.
 message EchoRequest {
