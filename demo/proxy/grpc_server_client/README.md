@@ -56,7 +56,8 @@ export LGOBIN=/Users/niuyufu/go_1.12/bin
 # 构建grpc测试server与client
 
 - 首先编写 `echo.proto`
-- 运行IDL生成命令
+- 运行IDL生成命令，（如：遇到命令不存在 command not found: protoc 请参照上文帮助）
+
 `protoc -I . --go_out=plugins=grpc:proto ./echo.proto`
 - 使用生成的IDL单独构建 server 与 client 即可
 
