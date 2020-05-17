@@ -47,12 +47,14 @@ func (r *RealServer) HelloHandler(w http.ResponseWriter, req *http.Request) {
 	//127.0.0.1:8008/abc?sdsdsa=11
 	//r.Addr=127.0.0.1:8008
 	//req.URL.Path=/abc
-	fmt.Println(req.Host)
+	//fmt.Println(req.Host)
 	upath := fmt.Sprintf("http://%s%s\n", r.Addr, req.URL.Path)
 	realIP := fmt.Sprintf("RemoteAddr=%s,X-Forwarded-For=%v,X-Real-Ip=%v\n", req.RemoteAddr, req.Header.Get("X-Forwarded-For"), req.Header.Get("X-Real-Ip"))
-
+	header:=fmt.Sprintf("headers =%v\n",req.Header)
 	io.WriteString(w, upath)
 	io.WriteString(w, realIP)
+	io.WriteString(w, header)
+
 }
 
 func (r *RealServer) ErrorHandler(w http.ResponseWriter, req *http.Request) {

@@ -28,9 +28,9 @@ func main() {
 	s := grpc.NewServer(
 		grpc.ChainStreamInterceptor(
 			grpc_interceptor.GrpcAuthStreamInterceptor,
-			grpc_interceptor.GrpcFlowCountStreamInterceptor(counter)), //流式方法拦截
-		grpc.CustomCodec(proxy.Codec()),           			//自定义codec
-		grpc.UnknownServiceHandler(grpcHandler)) //自定义全局回调
+			grpc_interceptor.GrpcFlowCountStreamInterceptor(counter)),
+		grpc.CustomCodec(proxy.Codec()),
+		grpc.UnknownServiceHandler(grpcHandler))
 
 	fmt.Printf("server listening at %v\n", lis.Addr())
 	if err := s.Serve(lis); err != nil {

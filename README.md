@@ -142,12 +142,12 @@ mysql -h localhost -u root -p go_gateway < go_gateway.sql --default-character-se
 
 运行管理面板配合前端项目 - 达成服务管理功能
 ```
-go run main.go -endpoint dashboard
+go run main.go -config=./conf/dev/ -endpoint dashboard
 ```
 
 运行代理服务
 ```
-go run main.go -endpoint server
+go run main.go -config=./conf/dev/ -endpoint server
 ```
 
 ### 运行前端项目

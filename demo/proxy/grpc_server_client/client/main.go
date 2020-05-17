@@ -15,11 +15,12 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var addr = flag.String("addr", "localhost:8012", "the address to connect to")
+var addr = flag.String("addr", "localhost:8402", "the address to connect to")
 
 const (
 	timestampFormat = time.StampNano // "Jan _2 15:04:05.000"
 	streamingCount  = 10
+	AccessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk2OTExMTQsImlzcyI6ImFwcF9pZF9iIn0.qb2A_WsDP_-jfQBxJk6L57gTnAzZs-SPLMSS_UO6Gkc"
 )
 
 func unaryCallWithMetadata(c pb.EchoClient, message string) {
@@ -27,7 +28,7 @@ func unaryCallWithMetadata(c pb.EchoClient, message string) {
 
 	// Create metadata and context.
 	md := metadata.Pairs("timestamp", time.Now().Format(timestampFormat))
-	md.Append("authorization", "Bearer some-secret-token")
+	md.Append("authorization", "Bearer "+AccessToken)
 
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 	r, err := c.UnaryEcho(ctx, &pb.EchoRequest{Message: message})
@@ -41,7 +42,7 @@ func serverStreamingWithMetadata(c pb.EchoClient, message string) {
 	fmt.Printf("--- server streaming ---\n")
 
 	md := metadata.Pairs("timestamp", time.Now().Format(timestampFormat))
-	md.Append("authorization", "Bearer some-secret-token")
+	md.Append("authorization", "Bearer "+AccessToken)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 
 	stream, err := c.ServerStreamingEcho(ctx, &pb.EchoRequest{Message: message})
@@ -68,7 +69,7 @@ func serverStreamingWithMetadata(c pb.EchoClient, message string) {
 func clientStreamWithMetadata(c pb.EchoClient, message string) {
 	fmt.Printf("--- client streaming ---\n")
 	md := metadata.Pairs("timestamp", time.Now().Format(timestampFormat))
-	md.Append("authorization", "Bearer some-secret-token")
+	md.Append("authorization", "Bearer "+AccessToken)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 	stream, err := c.ClientStreamingEcho(ctx)
 	if err != nil {
@@ -93,7 +94,7 @@ func clientStreamWithMetadata(c pb.EchoClient, message string) {
 func bidirectionalWithMetadata(c pb.EchoClient, message string) {
 	fmt.Printf("--- bidirectional ---\n")
 	md := metadata.Pairs("timestamp", time.Now().Format(timestampFormat))
-	md.Append("authorization", "Bearer some-secret-token")
+	md.Append("authorization", "Bearer "+AccessToken)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 	stream, err := c.BidirectionalStreamingEcho(ctx)
 	if err != nil {
@@ -148,16 +149,16 @@ func main() {
 			unaryCallWithMetadata(c, message)
 			time.Sleep(400 * time.Millisecond)
 			//}
-
-			////服务端流式
+			//
+			//服务端流式
 			serverStreamingWithMetadata(c, message)
 			time.Sleep(1 * time.Second)
 
-			////客户端流式
+			//客户端流式
 			clientStreamWithMetadata(c, message)
 			time.Sleep(1 * time.Second)
-			//
-			////双向流式
+
+			//双向流式
 			bidirectionalWithMetadata(c, message)
 		}()
 	}

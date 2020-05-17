@@ -31,16 +31,18 @@ func main() {
 	//构建路由及设置中间件
 	counter, _ := public.NewFlowCountService("local_app", time.Second)
 	router := tcp_middleware.NewTcpSliceRouter()
-	router.Group("/").Use(tcp_middleware.IpWhiteListMiddleWare(), tcp_middleware.FlowCountMiddleWare(counter))
+	router.Group("/").Use(
+		tcp_middleware.IpWhiteListMiddleWare(),
+		tcp_middleware.FlowCountMiddleWare(counter))
 
 	//构建回调handler
-	routerHandler := tcp_middleware.NewTcpSliceRouterHandler(func(c *tcp_middleware.TcpSliceRouterContext) tcp_proxy.TCPHandler {
-		return proxy.NewTcpLoadBalanceReverseProxy(c, rb)
-	}, router)
+	routerHandler := tcp_middleware.NewTcpSliceRouterHandler(
+		func(c *tcp_middleware.TcpSliceRouterContext) tcp_proxy.TCPHandler {
+			return proxy.NewTcpLoadBalanceReverseProxy(c, rb)
+		}, router)
 
 	//启动服务
 	tcpServ := tcp_proxy.TcpServer{Addr: addr, Handler: routerHandler,}
 	fmt.Println("Starting tcp_proxy at " + addr)
 	tcpServ.ListenAndServe()
 }
-

@@ -13,8 +13,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
-github.com/e421083458/grpc-proxy v0.0.0-20200322124211-7410a977f11d h1:duES6XSuFaLfBQ09fiJH70RrU9vgp8SkbciPLFdNLkM=
-github.com/e421083458/grpc-proxy v0.0.0-20200322124211-7410a977f11d/go.mod h1:9/MdR/QZY8COiGUgRUEv7O4QBeRpXEjSPQEd8yuFPzk=
+github.com/e421083458/grpc-proxy v0.2.0 h1:lmyFOE1FjK9geZhL97ei3ctEJp/6V6Mrjgr3gtQstcY=
+github.com/e421083458/grpc-proxy v0.2.0/go.mod h1:9/MdR/QZY8COiGUgRUEv7O4QBeRpXEjSPQEd8yuFPzk=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

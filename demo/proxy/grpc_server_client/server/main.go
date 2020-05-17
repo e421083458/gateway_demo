@@ -7,6 +7,7 @@ import (
 	"fmt"
 	pb "github.com/e421083458/gateway_demo/demo/proxy/grpc_server_client/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"io"
 	"log"
 	"net"
@@ -72,6 +73,11 @@ func (s *server) BidirectionalStreamingEcho(stream pb.Echo_BidirectionalStreamin
 
 func (s *server) UnaryEcho(ctx context.Context, in *pb.EchoRequest) (*pb.EchoResponse, error) {
 	fmt.Printf("--- UnaryEcho ---\n")
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		log.Println("miss metadata from context")
+	}
+	fmt.Println("md",md)
 	fmt.Printf("request received: %v, sending echo\n", in)
 	return &pb.EchoResponse{Message: in.Message}, nil
 }

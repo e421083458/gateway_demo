@@ -33,12 +33,12 @@ func main() {
 	if err != nil {
 		log.Fatalln("Error:", err)
 	}
-
 	transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
 	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
 
 	server := thrift.NewTSimpleServer4(processor, serverSocket, transportFactory, protocolFactory)
 	fmt.Println("Running at:", *addr)
-	server.Serve()
+	if err := server.Serve(); err != nil {
+		log.Fatalf(err.Error())
+	}
 }
-
