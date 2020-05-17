@@ -290,3 +290,7 @@ https://www.cnblogs.com/happy-king/p/9191356.html
 nodejs 安装 https://nodejs.org/zh-cn/download/
 
 效率翻倍的 VS Code 使用指南 https://mp.weixin.qq.com/s/QpbeEgdefw2iaT8qaxkFDA
+
+## Kubernetes安装
+通过Minikube快速搭建一个本地的Kubernetes单节点环境
+https://m.imooc.com/article/23785
